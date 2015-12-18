@@ -18,60 +18,52 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
+                android:id="@+id/item_1"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="2dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/minicon_001" />
 
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
+                android:id="@+id/item_2"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="2dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/minicon_002" />
 
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
+                android:id="@+id/item_3"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="2dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/minicon_003" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
+                android:id="@+id/item_4"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="2dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/minicon_004" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_susi" />
+                android:id="@+id/item_5"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/minicon_005" />
 
 
         </LinearLayout>
@@ -89,50 +81,62 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <View
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/holo_blue_bright"/>
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:text="Divider"
+                    android:background="#00AA50"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_mt" />
-
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_mt" />
-
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_mt" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_mt" />
+                    android:id="@+id/item_6"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/minicon_006" />
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_mt" />
+                    android:id="@+id/item_7"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/minicon_007" />
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_mt" />
+                    android:id="@+id/item_8"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/minicon_008" />
+
+                <ImageView
+                    android:id="@+id/item_9"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/minicon_009" />
+
+
+                <ImageView
+                    android:id="@+id/item_10"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/minicon_010" />
 
             </LinearLayout>
 

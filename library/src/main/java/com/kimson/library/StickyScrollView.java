@@ -2,6 +2,7 @@ package com.kimson.library;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,15 @@ public class StickyScrollView extends ScrollView {
     public static final int PAGE_TOP = 0;
     public static final int PAGE_BOTTOM = 1;
     public static final double PERCENT = 0.4;
+    public static final int ANIMATION_DURATION = 220;
+    public static final int TOUCH_DURATION = 150;
 
     private ViewGroup mChildLayout;
     private View mTopChildView;
-    private View mBottomChildView;
 
     private Context mContext;
-    private OnPageChangeListener listener;
+    private OnPageChangeListener onPageChangeListener;
+    private boolean isScrollAuto;
 
     private Scroller mScroller;             //滑动类
     private int screenHeight;               //屏幕高度
@@ -30,32 +33,29 @@ public class StickyScrollView extends ScrollView {
     private int topChildHeight;             //topview的高度
     private boolean isTouch;                //用户是否在触控屏幕
     private int currentPage;                //值为0时屏幕显示topview，值为1时屏幕显示bottomview
-    private long downTime;
-    private long upTime;
-    private int upY;
-
+    private long downTime;                  //用户按下屏幕的时间戳
+    private long upTime;                    //用户抬起时的时间戳
+    private int downY;                      //用户按下屏幕的y坐标
+    private int upY;                        //用户抬起的y坐标
+    private boolean isPageChange;           //页面是否切换
 
     public StickyScrollView(Context context) {
         super(context);
-        init(context);
+        this.mContext = context;
     }
 
     public StickyScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        this.mContext = context;
     }
 
     public StickyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    public void setListener(OnPageChangeListener listener) {
-        this.listener = listener;
-    }
-
-    private void init(Context context) {
         this.mContext = context;
+    }
+
+    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+        this.onPageChangeListener = onPageChangeListener;
     }
 
     @Override
@@ -64,7 +64,6 @@ public class StickyScrollView extends ScrollView {
 
         mChildLayout = (ViewGroup) getChildAt(0);
         mTopChildView = mChildLayout.getChildAt(0);
-        mBottomChildView = mChildLayout.getChildAt(1);
         topChildHeight = mTopChildView.getMeasuredHeight();
         screenHeight = getMeasuredHeight();
         offsetDistance = topChildHeight - screenHeight;
@@ -75,6 +74,7 @@ public class StickyScrollView extends ScrollView {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 isTouch = true;
+                downY = (int) ev.getY();
                 downTime = System.currentTimeMillis();
                 if (mScroller != null) {
                     mScroller.forceFinished(true);
@@ -85,50 +85,51 @@ public class StickyScrollView extends ScrollView {
                 break;
             case MotionEvent.ACTION_UP:
                 isTouch = false;
-                upY = getScrollY();
+                upY = (int) ev.getY();
                 upTime = System.currentTimeMillis();
+                //用户手指在屏幕上的时间
                 long duration = upTime - downTime;
-                if (currentPage == PAGE_TOP) {
-                    //下面的判断已经能确定用户是否往上滑
-                    if (getScrollY() > offsetDistance) {
-                        mScroller = new Scroller(mContext);
-                        if (getScrollY() < (screenHeight * PERCENT + offsetDistance)) {
-                            scrollToTarget(PAGE_TOP);
-                        } else {
-                            //切换到下界面
-                            scrollToTarget(PAGE_BOTTOM);
-                            currentPage = PAGE_BOTTOM;
+
+                //这里要确保点击事件不失效
+                if (Math.abs(upY - downY) > 50) {
+                    Log.e(TAG, ">>>ISN_T CLICK:" + Math.abs(upY - downY));
+                    if (currentPage == PAGE_TOP) {
+                        //下面的判断已经能确定用户是否往上滑
+                        if (getScrollY() > offsetDistance) {
+                            mScroller = new Scroller(mContext);
+                            if (getScrollY() < (screenHeight * PERCENT + offsetDistance) && duration > TOUCH_DURATION) {
+                                isPageChange = false;
+                                scrollToTarget(PAGE_TOP);
+                            } else {
+                                //切换到下界面
+                                isPageChange = true;
+                                isScrollAuto = duration < TOUCH_DURATION ? true : false;
+                                scrollToTarget(PAGE_BOTTOM);
+                                currentPage = PAGE_BOTTOM;
+                            }
                             return false;
                         }
-                    }
-                } else {
-                    if (getScrollY() < topChildHeight) {
-                        mScroller = new Scroller(mContext);
-                        if (getScrollY() < (topChildHeight - screenHeight * PERCENT)) {
-                            //切换到上界面
-                            scrollToTarget(PAGE_TOP);
-                            currentPage = PAGE_TOP;
+                    } else {
+                        if (getScrollY() < topChildHeight) {
+                            mScroller = new Scroller(mContext);
+                            if (getScrollY() < (topChildHeight - screenHeight * PERCENT) || duration < TOUCH_DURATION) {
+                                //切换到上界面
+                                isPageChange = true;
+                                isScrollAuto = duration < TOUCH_DURATION ? true : false;
+                                scrollToTarget(PAGE_TOP);
+                                currentPage = PAGE_TOP;
+                            } else {
+                                isPageChange = false;
+                                scrollToTarget(PAGE_BOTTOM);
+                            }
                             return false;
-                        } else {
-                            scrollToTarget(PAGE_BOTTOM);
                         }
                     }
                 }
-
                 break;
         }
         return super.dispatchTouchEvent(ev);
     }
-
-//    private void scrollToDistance(final int distance) {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                //使用该方法时主要要使用新线程
-//                scrollTo(0, distance);
-//            }
-//        }, 50);
-//    }
 
     /**
      * 滚动到指定位置
@@ -137,10 +138,10 @@ public class StickyScrollView extends ScrollView {
         int delta;
         if (currentPage == PAGE_TOP) {
             delta = getScrollY() - offsetDistance;
-            mScroller.startScroll(0, getScrollY(), 0, -delta, Math.abs(delta) / 3);
+            mScroller.startScroll(0, getScrollY(), 0, -delta, isScrollAuto == true ? ANIMATION_DURATION : (int) (Math.abs(delta) * 0.4));
         } else if (currentPage == PAGE_BOTTOM) {
             delta = getScrollY() - topChildHeight;
-            mScroller.startScroll(0, getScrollY(), 0, -delta, Math.abs(delta) / 3);
+            mScroller.startScroll(0, getScrollY(), 0, -delta, isScrollAuto == true ? ANIMATION_DURATION : (int) (Math.abs(delta) * 0.4));
         }
         postInvalidate();
     }
@@ -157,7 +158,7 @@ public class StickyScrollView extends ScrollView {
             postInvalidate();
             if (mScroller.isFinished()) {
                 mScroller = null;
-//                listener.OnPageChange(currentPage);
+                if (onPageChangeListener != null && isPageChange) onPageChangeListener.OnPageChange(currentPage);
             }
         }
     }
@@ -170,6 +171,7 @@ public class StickyScrollView extends ScrollView {
         if (currentPage == PAGE_TOP) {
             if (getScrollY() > offsetDistance && !isTouch) {
                 if (mScroller == null) {
+                    //用于控制当滑动到分界线时停止滚动
                     scrollTo(0, offsetDistance);
                 } else {
                     scrollToTarget(PAGE_TOP);
