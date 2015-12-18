@@ -17,7 +17,7 @@ public class StickyScrollView extends ScrollView {
     public static final int PAGE_TOP = 0;
     public static final int PAGE_BOTTOM = 1;
     public static final double PERCENT = 0.4;
-    public static final int ANIMATION_DURATION = 220;
+    public static final int ANIMATION_DURATION = 180;
     public static final int TOUCH_DURATION = 150;
 
     private ViewGroup mChildLayout;
@@ -25,8 +25,8 @@ public class StickyScrollView extends ScrollView {
 
     private Context mContext;
     private OnPageChangeListener onPageChangeListener;
-    private boolean isScrollAuto;
 
+    private boolean isScrollAuto;           //判断是否自由滚动
     private Scroller mScroller;             //滑动类
     private int screenHeight;               //屏幕高度
     private int offsetDistance;             //topview的高度与屏幕的高度差
